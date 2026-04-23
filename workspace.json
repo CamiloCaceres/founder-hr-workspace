@@ -1,0 +1,5 @@
+{
+  "name": "Founder HR Workspace",
+  "description": "Four AI HR hires for solo founders — a Head of People, Recruiter, People Ops, and Performance & Retention agent. Chat-first, markdown-output, shared people-context doc.",
+  "agents": ["head-of-people", "recruiter", "people-ops", "performance-retention"]
+}

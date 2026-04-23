@@ -1,0 +1,101 @@
+{
+  "id": "performance-retention",
+  "name": "Performance & Retention",
+  "description": "Your Performance & Retention lead. I run the feedback loop — weekly 1:1 check-ins, retention-risk scoring, stay-conversation scripts, review-cycle artifacts, and PIP drafts with a mandatory escalation check. Highest-leverage agent for a solo founder with early hires.",
+  "icon": "Heart",
+  "category": "business",
+  "author": "Houston Founder HR",
+  "tags": [
+    "hr",
+    "solo-founder",
+    "performance",
+    "retention",
+    "1-on-1s"
+  ],
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "customComponent": "Dashboard"
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "builtIn": "board",
+      "badge": "activity"
+    },
+    {
+      "id": "job-description",
+      "label": "Job Description",
+      "builtIn": "job-description"
+    },
+    {
+      "id": "files",
+      "label": "Files",
+      "builtIn": "files"
+    },
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "builtIn": "integrations"
+    }
+  ],
+  "defaultTab": "overview",
+  "agentSeeds": {
+    "outputs.json": "[]",
+    ".houston/activity.json": "[{\"id\":\"2f3a6e94-d3c5-4b71-9e47-3f0c1b2f1d87\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: your team roster (connected HRIS preferred, else paste), your check-in rhythm (weekly / biweekly / monthly + Slack channel), and your review-cycle rhythm (annual / semi-annual / quarterly + next cycle date). Best modality per topic: connected app via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]"
+  },
+  "useCases": [
+    {
+      "category": "Rhythm",
+      "title": "Collect this week's 1:1 check-ins across the team",
+      "blurb": "Who responded, who's quiet, themes, escalations.",
+      "prompt": "Collect this week's 1:1 check-ins across the team.",
+      "fullPrompt": "Collect this week's check-ins from every team member. Use the collect-checkins skill. Pull the roster from the connected HRIS via Composio (Gusto / Deel / Rippling — whichever is linked). Send the check-in prompt to each person via the connected Slack channel — use the default prompt from people-context.md, or the override I've configured. Collect responses over the window. Summarize into: who responded, who's quiet (2+ weeks silent flag), themes clustered (wins · blockers · concerns), and any responses flagged for escalation per people-context.md. Save to checkins/{YYYY-MM-DD}.md and log in outputs.json.",
+      "description": "Per the HRIS roster, send a check-in prompt to each team member via connected Slack. Collect responses. Summarize — who's quiet, themes, flagged concerns.",
+      "outcome": "A weekly check-in summary at checkins/{YYYY-MM-DD}.md with who's quiet and what themes emerged.",
+      "skill": "collect-checkins",
+      "tool": "Slack"
+    },
+    {
+      "category": "Retention",
+      "title": "Score retention risk across the team",
+      "blurb": "GREEN / YELLOW / RED per person — signal reasoning on REDs.",
+      "prompt": "Score retention risk across the team — who's a flight risk?",
+      "fullPrompt": "Score retention risk across the entire team. Use the score-retention-risk skill. Fuse four signal families per person: engagement (check-in responsiveness trend, Slack activity, PR/commit cadence via connected engineering tools), sentiment (check-in tone, cross-team mentions, anonymous-feedback mentions), tenure milestones (approaching cliff vesting, post-promotion honeymoon, recent manager change), comp exposure (time since last comp review, gap vs market if people-context.md has comp bands). Classify GREEN / YELLOW / RED per person. For every RED flag, surface the specific signal combination that drove the score AND recommend draft-stay-conversation as the next move. Save to retention-scores/{YYYY-MM-DD}.md and log in outputs.json. Never share this publicly — founder-eyes-only.",
+      "description": "Fuse engagement, sentiment, tenure, and comp signals per team member. Classify GREEN / YELLOW / RED. Recommend stay conversations for REDs — never shared publicly.",
+      "outcome": "A retention score at retention-scores/{YYYY-MM-DD}.md with signal reasoning on every RED flag.",
+      "skill": "score-retention-risk"
+    },
+    {
+      "category": "Retention",
+      "title": "Draft a stay conversation for someone flagged RED",
+      "blurb": "Verbal 1:1 script — open, listen, surface, ask, propose.",
+      "prompt": "Draft a stay conversation for {employee} — they flagged RED.",
+      "fullPrompt": "Draft a stay conversation for {employee}. Use the draft-stay-conversation skill. Read people-context.md for voice + hard-no constraints (e.g. if 'we never counter-offer on resignations' is there, respect it). Read the dossier at ../people-ops/dossiers/{employee-slug}.md if it exists — otherwise work from the RED flag signals and recent check-ins. Draft a 1:1 SCRIPT (not an email) structured: open → listen → surface (what I noticed without accusing) → ask (what would make you stay) → propose (concrete levers the founder can actually pull — scope, title, project, comp if policy allows). Save to stay-conversations/{employee-slug}.md and log in outputs.json. Remind the founder in the summary: this is a prompt for a verbal 1:1 — don't send it.",
+      "description": "A verbal 1:1 script (NOT an email). Open → listen → surface → ask → propose. Reads people-context.md for voice and hard-no constraints.",
+      "outcome": "A stay-conversation script at stay-conversations/{employee-slug}.md — ready for your 1:1, not for sending.",
+      "skill": "draft-stay-conversation"
+    },
+    {
+      "category": "Reviews",
+      "title": "Prep the Q{N} review cycle — templates + timeline",
+      "blurb": "Self, manager, calibration doc, full timeline.",
+      "prompt": "Prep the Q{N} review cycle — self-review, manager-review, calibration.",
+      "fullPrompt": "Prep the upcoming review cycle. Use the prep-review-cycle skill. Read the review-cycle rhythm from people-context.md (annual / semi-annual / quarterly + next cycle date) and the current roster from the HRIS via Composio. Produce four artifacts: (1) self-review template scoped to our leveling framework, (2) manager-review template scoped to leveling + cycle rubric, (3) calibration doc giving a cross-team view for leveling consistency / comp bumps / promotion candidates, (4) timeline — self-reviews due → manager-reviews due → calibration meeting → comp letters → delivery conversations. Save to review-cycles/{cycle-slug}.md (e.g. 2026-q2) and log in outputs.json as status: draft. Do not publish until the founder approves the cycle structure.",
+      "description": "Self-review + manager-review templates, a calibration doc, and the full timeline — all scoped to your leveling framework. Draft-only until you sign off.",
+      "outcome": "A review-cycle package at review-cycles/{cycle-slug}.md with templates, calibration doc, and timeline.",
+      "skill": "prep-review-cycle"
+    },
+    {
+      "category": "Tough calls",
+      "title": "Draft a PIP — with escalation check before drafting",
+      "blurb": "Context → expectations → 30/60/90 → support → consequences.",
+      "prompt": "Draft a PIP for {employee} — {performance concerns}.",
+      "fullPrompt": "Draft a PIP for {employee}. Use the draft-pip skill. BEFORE drafting, run the mandatory escalation check: read the escalation-rules section of people-context.md, assess whether this case could trigger protected-class + pretextual-timing concerns (e.g. concerns arising within 30 days of a medical leave request, pregnancy disclosure, whistleblower report). If ANY trigger matches → STOP, do not draft the PIP, instead draft an escalation note to me naming the specific trigger and stating 'this case needs a human lawyer before any PIP is written.' If clear: read the employee dossier at ../people-ops/dossiers/{employee-slug}.md if it exists, then draft the PIP with structure Context → Expectations (tied to leveling) → Milestones (30 / 60 / 90 day) → Support (what I/their manager will provide) → Consequences. Save to pips/{employee-slug}.md and log in outputs.json with the escalation classification field (drafted / blocked-on-escalation / needs-lawyer). Never deliver without my sign-off.",
+      "description": "Runs the escalation check first — if protected-class + pretextual-timing triggers fire, routes to a human lawyer and does NOT draft. Otherwise Context → Expectations → 30/60/90 → Support → Consequences.",
+      "outcome": "A PIP draft at pips/{employee-slug}.md OR an escalation note if the case needs a lawyer.",
+      "skill": "draft-pip"
+    }
+  ]
+}

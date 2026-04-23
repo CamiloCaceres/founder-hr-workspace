@@ -1,0 +1,123 @@
+{
+  "id": "recruiter",
+  "name": "Recruiter",
+  "description": "Your end-to-end recruiter. Sources candidates from public signal, screens resumes, scores LinkedIn profiles against your rubric, preps interviewers, coordinates panels, debriefs loops, and drafts offer letters against your comp bands. Never sends without your sign-off.",
+  "icon": "UserSearch",
+  "category": "business",
+  "author": "Houston Founder HR",
+  "tags": [
+    "hr",
+    "solo-founder",
+    "recruiting",
+    "hiring"
+  ],
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "customComponent": "Dashboard"
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "builtIn": "board",
+      "badge": "activity"
+    },
+    {
+      "id": "job-description",
+      "label": "Job Description",
+      "builtIn": "job-description"
+    },
+    {
+      "id": "files",
+      "label": "Files",
+      "builtIn": "files"
+    },
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "builtIn": "integrations"
+    }
+  ],
+  "defaultTab": "overview",
+  "agentSeeds": {
+    "outputs.json": "[]",
+    ".houston/activity.json": "[{\"id\":\"ec6b97bd-cc4a-4ccb-89b8-dcd74810a3a9\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: your ATS or hiring pipeline, your open reqs, and your hiring voice (past offers / rejections). Best modality per topic: connected app via Composio (ATS · Inbox) > file/URL > paste. I also read the shared people-context doc owned by the Head of People — run that agent first if you haven't.\",\"status\":\"needs_you\"}]"
+  },
+  "useCases": [
+    {
+      "category": "Pipeline",
+      "title": "Source 20 candidates from public signal",
+      "blurb": "Ranked list with links, signal, and context notes.",
+      "prompt": "Source 20 candidates for the {role} req from {signal source}.",
+      "fullPrompt": "Source ~20 candidates for the {role} req. Use the source-candidates skill. Read the leveling framework and team-shape section in ../head-of-people/people-context.md for the criteria rubric — do not invent the role. Given a signal source (GitHub · LinkedIn · a conference attendee list · a community post · an OSS repo), pull candidates matching the rubric, score each against the must-haves, and output a ranked list with link, one-line signal reason, and red flags. Save to sourcing-lists/{role-slug}-{YYYY-MM-DD}.md and log in outputs.json as status: draft. Flag the 5 highest-conviction reach-outs.",
+      "description": "Pull candidates from any public signal (GitHub · LinkedIn · community posts · conference lists), rank against the rubric from people-context.md, output a sourcing list with red flags.",
+      "outcome": "Ranked sourcing list at sourcing-lists/{role-slug}-{YYYY-MM-DD}.md with top 5 reach-outs flagged.",
+      "skill": "source-candidates",
+      "tool": "GitHub · LinkedIn"
+    },
+    {
+      "category": "Screening",
+      "title": "Score a LinkedIn profile against our rubric",
+      "blurb": "0–100 score, background summary, red flags.",
+      "prompt": "Score this LinkedIn URL against our {role} rubric: {url}",
+      "fullPrompt": "Score {LinkedIn URL} against the criteria rubric for {role}. Use the score-candidate skill. Read the leveling framework + comp bands in ../head-of-people/people-context.md first. Scrape the profile via the web-scrape Composio category. Extract titles, tenures, education, skills, recent activity. Score 0-100 against the role's rubric with reasoning for each sub-score. Surface 3-5 red flags to probe in interviews. Save/append to candidates/{candidate-slug}.md and log in outputs.json as type: score.",
+      "description": "Scrape the profile via a Composio web-scrape tool, evaluate against the role's rubric in people-context.md, produce a 0-100 score + red flags.",
+      "outcome": "Score and summary appended to candidates/{candidate-slug}.md.",
+      "skill": "score-candidate",
+      "tool": "LinkedIn"
+    },
+    {
+      "category": "Screening",
+      "title": "Rank the resume stack for an open req",
+      "blurb": "Pass / fail + structured records for every resume.",
+      "prompt": "Screen the resume stack for the {role} req.",
+      "fullPrompt": "Screen the resume stack for the {role} req. Use the screen-resume skill. Read the leveling framework + criteria rubric for {role} from ../head-of-people/people-context.md and reqs/{role-slug}.md (ask me if the req is missing). Parse each resume PDF via a Composio docs tool. Extract structured fields (education, roles, tenure, skills). Evaluate against the rubric — pass, borderline, fail. Output a ranked table with score + 1-line reasoning, and write one candidate record per applicant to candidates/{candidate-slug}.md. Log a batch entry in outputs.json as type: screen.",
+      "description": "Parse resumes via a Composio docs tool, extract structured fields, evaluate against the role rubric, rank the stack and mark borderline/fail/pass.",
+      "outcome": "One candidates/{candidate-slug}.md per applicant + a ranked summary entry in outputs.json.",
+      "skill": "screen-resume",
+      "tool": "Google Drive · Dropbox"
+    },
+    {
+      "category": "Loops",
+      "title": "Prep me to interview a candidate",
+      "blurb": "Brief, likely questions, red flags, scoring rubric.",
+      "prompt": "Prep me to interview {candidate} for {role}.",
+      "fullPrompt": "Prep me to interview {candidate} for {role}. Use the prep-interviewer skill. Read ../head-of-people/people-context.md (leveling, values, escalation). Read candidates/{candidate-slug}.md for anything we already know (screen, score). Build an INTERVIEWER-SIDE brief (not candidate-side): background summary, 6-10 likely questions scoped to the role's rubric, 3 red flags to probe, reference themes to surface, and a scoring rubric per question. Save/append to interview-loops/{candidate-slug}.md. Log in outputs.json as type: interview-prep.",
+      "description": "Build an interviewer-side brief — background summary, likely questions scoped to the rubric, red flags to probe, scoring template. Not candidate-side prep.",
+      "outcome": "Interviewer brief at interview-loops/{candidate-slug}.md.",
+      "skill": "prep-interviewer"
+    },
+    {
+      "category": "Loops",
+      "title": "Coordinate a full interview loop",
+      "blurb": "Draft schedule + per-interviewer briefs. You approve sends.",
+      "prompt": "Schedule and brief the panel for {candidate}'s loop.",
+      "fullPrompt": "Coordinate the full interview loop for {candidate}. Use the coordinate-interviews skill. Read ../head-of-people/people-context.md. Given panel members + candidate + target time window, propose a schedule via a Composio calendar tool — check free/busy, draft invites (DO NOT send). For each interviewer, run prep-interviewer so every panelist has a tailored brief. Append schedule + brief sections to interview-loops/{candidate-slug}.md. Log in outputs.json as type: loop-scheduled. Surface conflicts. I approve and send the invites.",
+      "description": "Propose a schedule via a Composio calendar, check free/busy, draft invites (never send), and brief every panelist. Founder approves and sends.",
+      "outcome": "Schedule + per-interviewer brief appended to interview-loops/{candidate-slug}.md.",
+      "skill": "coordinate-interviews",
+      "tool": "Google Calendar"
+    },
+    {
+      "category": "Decisions",
+      "title": "Debrief the loop and give me a hire / no-hire memo",
+      "blurb": "Themes, contradictions, rubric score, recommendation.",
+      "prompt": "Synthesize the panel feedback for {candidate} — hire / no hire?",
+      "fullPrompt": "Synthesize the panel feedback for {candidate}. Use the debrief-loop skill. Read ../head-of-people/people-context.md (leveling, hard nos). Pull interviewer feedback from interview-loops/{candidate-slug}.md and any pasted / Composio-collected notes. Extract themes, surface contradictions, score against the role rubric. Produce a decision memo: hire / no-hire recommendation, confidence (low/medium/high), reasoning, risks, reference themes to verify. Append to interview-loops/{candidate-slug}.md and log in outputs.json as type: debrief. Recommendation only — you decide.",
+      "description": "Aggregate interviewer feedback, surface contradictions, score against the rubric, produce a decision memo. Recommendation only — founder decides.",
+      "outcome": "Decision memo appended to interview-loops/{candidate-slug}.md.",
+      "skill": "debrief-loop"
+    },
+    {
+      "category": "Offers",
+      "title": "Draft the offer letter against our comp bands",
+      "blurb": "Role, level, base, equity, start date. Draft, never sent.",
+      "prompt": "Draft the offer letter for {candidate} at {level}.",
+      "fullPrompt": "Draft the offer letter for {candidate} at {level}. Use the draft-offer skill. Read ../head-of-people/people-context.md for comp bands, equity stance, leveling framework, AND voice notes — never invent comp, never go outside the band without an explicit founder override note. Read interview-loops/{candidate-slug}.md and config/voice.md. Draft role, level, base, equity, start date, contingencies. Keep it in our tone. Save to offers/{candidate-slug}.md and log in outputs.json as type: offer, status: draft. NEVER sent.",
+      "description": "Reads comp bands, equity stance, and voice notes from people-context.md plus config/voice.md. Drafts role/level/base/equity/start. Status: draft. Never sent.",
+      "outcome": "Draft offer letter at offers/{candidate-slug}.md — you review and send.",
+      "skill": "draft-offer"
+    }
+  ]
+}
