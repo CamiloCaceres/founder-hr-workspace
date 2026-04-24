@@ -25,6 +25,11 @@
       "badge": "activity"
     },
     {
+      "id": "routines",
+      "label": "Routines",
+      "builtIn": "routines"
+    },
+    {
       "id": "job-description",
       "label": "Job Description",
       "builtIn": "job-description"
@@ -43,7 +48,8 @@
   "defaultTab": "overview",
   "agentSeeds": {
     "outputs.json": "[]",
-    ".houston/activity.json": "[{\"id\":\"f616c6ec-6dae-410f-9c03-3b5b2330f5cf\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: where your employee records live (HRIS), where team members ask HR questions (helpdesk channel), and where your policy docs live. Best modality per topic: connected app via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]"
+    ".houston/activity.json": "[{\"id\":\"f616c6ec-6dae-410f-9c03-3b5b2330f5cf\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: where your employee records live (HRIS), where team members ask HR questions (helpdesk channel), and where your policy docs live. Best modality per topic: connected app via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]",
+    ".houston/routines/routines.json": "[{\"id\":\"weekly-compliance-digest\",\"name\":\"Weekly compliance digest\",\"description\":\"Scan the compliance calendar for items coming due in the next 30 days and surface anything that needs founder action.\",\"prompt\":\"Run the weekly compliance digest. Use the compliance-calendar skill as the underlying engine — but this is a READ/REFRESH pass, not a full rebuild. Read ../head-of-people/people-context.md (review-cycle rhythm section) and compliance-calendar.md at the agent root if it exists. If compliance-calendar.md does not exist yet, stay silent — the founder has not run compliance-calendar for the first time, and this routine should not bootstrap it. Refresh the calendar by scanning the connected HRIS for new hires (I-9 3-day rule), W-4 refresh triggers, visa expirations (90/60/30 day windows), state registration items, review-cycle dates, and equity vesting cliffs. If the required HRIS integration is not connected, state which Composio category is missing (hris) and stop — do NOT surface activity unless user action is required to link. Produce a digest ONLY if there are items due within 30 days, overdue items, or newly-discovered items since the last run. Save the digest to policy-answers/{YYYY-MM-DD}-compliance-digest.md and log in outputs.json as type: compliance. If everything is clean and nothing comes due in the next 30 days, stay silent.\",\"schedule\":\"0 9 * * 1\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"},{\"id\":\"weekly-helpdesk-review\",\"name\":\"Weekly helpdesk review\",\"description\":\"Surface policy answers or approvals sitting in needs-founder-review state for more than a week.\",\"prompt\":\"Scan outputs.json at the agent root for policy-answer and approval entries. Flag anything in one of these conditions: (1) status is draft AND updatedAt is more than 7 days old, (2) classification is 'ambiguous' or 'escalation' and the entry has no resolution note yet, (3) an approval classified as 'escalate' that has not been acted on. Read ../head-of-people/people-context.md for escalation rules if needed to contextualize. Do NOT re-draft the answers — just surface what's pending and the specific reason each item is stuck. If outputs.json has no such items, stay silent. Otherwise save a short triage note to policy-answers/{YYYY-MM-DD}-helpdesk-review.md and log in outputs.json as type: policy-answer with summary prefixed 'weekly-review:'. This routine is triage-only — founder decides next steps.\",\"schedule\":\"0 16 * * 5\",\"enabled\":true,\"suppress_when_silent\":true,\"created_at\":\"2026-04-23T00:00:00Z\",\"updated_at\":\"2026-04-23T00:00:00Z\"}]"
   },
   "useCases": [
     {
